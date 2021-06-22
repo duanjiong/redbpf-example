@@ -9,5 +9,5 @@ cd redbpf-example
 
 cargo build
 
-sudo ./target/debug/block_http
+sudo ./target/debug/block_http en0
 ```
