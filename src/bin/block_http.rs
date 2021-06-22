@@ -1,6 +1,7 @@
 use std::process;
 use std::net::Ipv4Addr;
 use std::ptr;
+use std::env;
 use futures::stream::StreamExt;
 use redbpf::{load::Loader, xdp};
 use tokio;
@@ -12,8 +13,10 @@ use probes::block_http::Packet;
 fn main() {
     if unsafe { libc::geteuid() } != 0 {
         println!("You must be root to use eBPF!");
-        process::exit(-1);
+        process::exit(1);
     }
+
+    let args: Vec<String> = env::args().collect();
 
     let mut rt = runtime::Runtime::new().unwrap();
 
@@ -22,7 +25,7 @@ fn main() {
             .expect("error loading probe");
 
         for xdp_prog in loader.xdps_mut() {
-            xdp_prog.attach_xdp("ens160", xdp::Flags::default())
+            xdp_prog.attach_xdp(&args[1], xdp::Flags::default())
                 .expect(&format!("error attaching program {}", xdp_prog.name()));
         }
 
