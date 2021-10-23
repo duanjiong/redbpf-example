@@ -20,6 +20,7 @@ fn main() {
 
     let mut rt = runtime::Runtime::new().unwrap();
 
+    println!("hahah");
     let _ = rt.block_on(async {
         let mut loader = Loader::load(probe_code())
             .expect("error loading probe");
